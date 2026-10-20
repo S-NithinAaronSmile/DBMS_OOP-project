@@ -210,20 +210,3 @@ JOIN departments pd ON p.dept_id = pd.dept_id
 WHERE e.dept_id <> p.dept_id
 ORDER BY e.name;
 ```
-
----
-
-## 6. Team Lead Viva Defense Guide
-
-1. **Q: Why use `LEFT JOIN` in Q9 instead of `INNER JOIN`?**  
-   *A*: With `INNER JOIN`, departments with no employees (like Legal) would be completely excluded from the result. `LEFT JOIN` ensures all departments appear, producing `0` for count and `NULL` for average salary.
-2. **Q: How does Q10 retrieve the manager's name from the same table?**  
-   *A*: By performing a **Self-Join** with aliases: `employees e LEFT JOIN employees m ON e.manager_id = m.emp_id`. The left join ensures top-level leaders with `manager_id IS NULL` still show with a `NULL` manager.
-3. **Q: Why use `WHERE a.assign_id IS NULL` in Q12?**  
-   *A*: This is an **Anti-Join**. We left-join `project_assignments` on `emp_id`. If an employee has no assignments, `a.assign_id` becomes `NULL`. Filtering for `IS NULL` isolates those employees cleanly.
-4. **Q: Why use `HAVING` instead of `WHERE` in Q13?**  
-   *A*: `WHERE` filters individual rows before aggregation, whereas `HAVING` filters aggregated groups (`AVG(salary) > 60000`) after `GROUP BY`.
-5. **Q: How does Q14 find the highest earner in each department?**  
-   *A*: Using a **correlated subquery**: `WHERE e.salary = (SELECT MAX(salary) FROM employees WHERE dept_id = e.dept_id)`. The inner query calculates the maximum salary for each employee's specific department.
-6. **Q: How is OOP demonstrated in the codebase?**  
-   *A*: Encapsulation via entity and DTO classes; Data abstraction via the `ReportDAO` interface; Singleton design pattern for `DatabaseConnection`; separation of presentation, data access, and domain models.
